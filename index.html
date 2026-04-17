@@ -242,6 +242,26 @@
       color: var(--muted);
     }
 
+    .article ol {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 28px;
+      counter-reset: ol-counter;
+    }
+
+    .article ol li {
+      counter-increment: ol-counter;
+      padding-left: 0;
+    }
+
+    .article ol li::before {
+      content: counter(ol-counter) ".";
+      position: static;
+      display: inline;
+      color: var(--text);
+      margin-right: 6px;
+    }
+
     .article hr {
       border: none;
       height: 1px;
