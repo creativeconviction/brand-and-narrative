@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand &amp; Narrative in the AI Era — BVP Atlas</title>
+
+  <!-- Sometype Mono — Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sometype+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- marked.js — markdown parser -->
+  <script src="https://cdn.jsdelivr.net/npm/marked@9.1.6/marked.min.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:   #0A0A0A;
+      --cream:   #F4F1EB;
+      --text:    #1C1C1C;
+      --muted:   #888880;
+      --rule:    rgba(28, 28, 28, 0.12);
+      --font:    'Sometype Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; font-size: 13px; }
+
+    body {
+      font-family: var(--font);
+      background: var(--cream);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ══════════════════════════════════════
+       HERO
+    ══════════════════════════════════════ */
+    .hero {
+      min-height: 100vh;
+      background: var(--black);
+      color: var(--cream);
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      padding: 56px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-image-right {
+      position: relative;
+      z-index: 1;
+      flex: 0 0 33%;
+      align-self: stretch;
+      margin-top: -56px;
+      margin-right: -48px;
+      margin-bottom: -56px;
+      overflow: hidden;
+    }
+
+    /* SWAP: hero image — replace the src attribute below with your image URL */
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.32;
+      filter: grayscale(15%);
+      display: block;
+    }
+    /* SWAP END */
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(10,10,10,0.1)  0%,
+        rgba(10,10,10,0.45) 45%,
+        rgba(10,10,10,0.88) 100%
+      );
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 860px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .hero-eyebrow {
+      font-size: 10.5px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(244,241,235,0.55);
+      margin-bottom: 20px;
+    }
+
+    .hero-title {
+      font-size: clamp(2.6rem, 6vw, 5.2rem);
+      font-weight: 700;
+      line-height: 1.06;
+      letter-spacing: -0.025em;
+      margin-bottom: 36px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 36px 48px;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(244,241,235,0.45);
+      border-top: 1px solid rgba(244,241,235,0.12);
+      padding-top: 24px;
+    }
+
+    .hero-meta-item strong {
+      display: block;
+      color: rgba(244,241,235,0.85);
+      margin-bottom: 3px;
+      font-weight: 500;
+    }
+
+    .scroll-cue {
+      position: absolute;
+      bottom: 30px;
+      right: 48px;
+      z-index: 1;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(244,241,235,0.3);
+      animation: float 2.4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0);   opacity: 0.3; }
+      50%       { transform: translateY(7px); opacity: 0.6; }
+    }
+
+    /* ══════════════════════════════════════
+       ARTICLE
+    ══════════════════════════════════════ */
+    .article {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 88px 32px 120px;
+    }
+
+    /* ── Scroll reveal base state ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(26px);
+      transition:
+        opacity  0.8s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Typography ── */
+    .article h2 {
+      font-size: clamp(1.45rem, 2.8vw, 1.9rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-top: 64px;
+      margin-bottom: 20px;
+      padding-top: 52px;
+      border-top: 1px solid var(--rule);
+    }
+
+    .article h2.first-heading {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: none;
+    }
+
+    .article h3 {
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 44px;
+      margin-bottom: 14px;
+    }
+
+    .article p {
+      font-size: 1.05rem;
+      line-height: 1.9;
+      margin-bottom: 22px;
+      color: #252520;
+    }
+
+    .article blockquote {
+      margin: 40px 0;
+      padding: 24px 28px;
+      border-left: 2.5px solid var(--black);
+      background: rgba(10,10,10,0.04);
+    }
+
+    .article blockquote p {
+      font-size: 1.2rem;
+      font-style: italic;
+      font-weight: 500;
+      line-height: 1.65;
+      margin-bottom: 0;
+      color: var(--text);
+    }
+
+    .article ul {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 28px;
+    }
+
+    .article li {
+      font-size: 1.05rem;
+      line-height: 1.75;
+      padding: 10px 0 10px 22px;
+      border-bottom: 1px solid rgba(28,28,28,0.06);
+      position: relative;
+      color: #252520;
+    }
+
+    .article li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--muted);
+    }
+
+    .article hr {
+      border: none;
+      height: 1px;
+      background: var(--rule);
+      margin: 56px 0;
+    }
+
+    .article strong { font-weight: 600; color: var(--black); }
+    .article em     { font-style: italic; }
+    .article a      { color: var(--text); }
+
+    /* ── Image placeholders ── */
+    .img-placeholder {
+      width: 100%;
+      background: rgba(10,10,10,0.05);
+      border: 1px dashed rgba(10,10,10,0.14);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 52px 0;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Empty placeholder keeps a fixed ratio */
+    .img-placeholder:not(:has(> img[src]:not([src=""]))) {
+      aspect-ratio: 16 / 9;
+    }
+
+    .img-placeholder img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .img-placeholder-label {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: center;
+      padding: 0 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .img-placeholder-icon {
+      font-size: 22px;
+      opacity: 0.25;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ══════════════════════════════════════
+       FOOTER
+    ══════════════════════════════════════ */
+    footer {
+      background: var(--black);
+      color: var(--cream);
+      padding: 68px 48px 60px;
+    }
+
+    .footer-inner {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .footer-eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(244,241,235,0.35);
+      margin-bottom: 28px;
+    }
+
+    .footer-heading {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--cream);
+    }
+
+    .footer-sub {
+      font-size: 0.875rem;
+      color: rgba(244,241,235,0.5);
+      line-height: 1.75;
+      max-width: 460px;
+      margin-bottom: 44px;
+    }
+
+    .footer-authors {
+      display: flex;
+      gap: 48px;
+      flex-wrap: wrap;
+      border-top: 1px solid rgba(244,241,235,0.1);
+      padding-top: 32px;
+      margin-bottom: 44px;
+    }
+
+    .footer-author strong {
+      display: block;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: var(--cream);
+    }
+
+    .footer-author a {
+      font-size: 0.775rem;
+      color: rgba(244,241,235,0.4);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-author a:hover { color: var(--cream); }
+
+    .footer-source {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: rgba(244,241,235,0.2);
+      border-top: 1px solid rgba(244,241,235,0.07);
+      padding-top: 24px;
+    }
+
+    /* ══════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════ */
+    @media (max-width: 600px) {
+      .hero        { padding: 40px 24px; }
+      .scroll-cue  { right: 24px; }
+      .article     { padding: 64px 22px 80px; }
+      footer       { padding: 52px 24px 44px; }
+      .hero-meta   { flex-direction: column; gap: 18px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════
+       HERO
+  ══════════════════════════════════════════ -->
+  <section class="hero">
+
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+      <!-- SWAP: Update the title below -->
+      <h1 class="hero-title">Brand &amp;<br>Narrative<br>in the AI Era</h1>
+      <!-- SWAP END -->
+      <div class="hero-meta">
+        <div class="hero-meta-item">
+          <strong>Authors</strong>
+          <!-- SWAP: Update authors -->
+          Libbie Frost &amp; Rayouf Alhumedhi
+          <!-- SWAP END -->
+        </div>
+        <div class="hero-meta-item">
+          <strong>Contributors</strong>
+          <!-- SWAP: Update contributors -->
+          Jeremy Levine &amp; Lauri Moore
+          <!-- SWAP END -->
+        </div>
+        <div class="hero-meta-item">
+          <strong>Published</strong>
+          <!-- SWAP: Update date -->
+          April 2026
+          <!-- SWAP END -->
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-image-right">
+      <canvas id="hero-water-canvas" style="width:100%;height:100%;display:block;background:#ffffff;"></canvas>
+    </div>
+
+    <p class="scroll-cue">↓ scroll</p>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       ARTICLE — injected by renderArticle()
+  ══════════════════════════════════════════ -->
+  <main class="article" id="article"></main>
+
+  <!-- ══════════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════════ -->
+  <footer class="reveal">
+    <div class="footer-inner">
+      <!-- SWAP: Update footer heading and sub -->
+      <p class="footer-heading">For builders in creative tooling</p>
+      <p class="footer-sub">
+        This is the second in a three-part series examining AI's impact on
+        product design, brand &amp; narrative, and consumer play.
+      </p>
+      <!-- SWAP END -->
+      <div class="footer-authors">
+        <div class="footer-author">
+          <strong>Libbie Frost</strong>
+          <a href="mailto:lfrost@bvp.com">lfrost@bvp.com</a>
+        </div>
+        <div class="footer-author">
+          <strong>Rayouf Alhumedhi</strong>
+          <a href="mailto:ralhumedhi@bvp.com">ralhumedhi@bvp.com</a>
+        </div>
+      </div>
+      <p class="footer-source">
+        Originally published on BVP Atlas &nbsp;·&nbsp; bvp.com/atlas
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    // ────────────────────────────────────────────────────────
+    // ARTICLE CONTENT
+    // Edit the markdown string below to update the article.
+    // Use <div class="img-placeholder" data-label="..."></div>
+    // wherever you want an image slot — then swap data-src in
+    // the rendered placeholder to point to your image file.
+    // ────────────────────────────────────────────────────────
+    const ARTICLE_MD = `
+<!-- SWAP: Replace everything below with your article content in markdown -->
+
+Your article content goes here. Use standard markdown formatting:
+
+## Section Heading
+
+Paragraph text goes here. You can use **bold**, *italic*, and [links](https://example.com).
+
+## Another Section
+
+- Bullet item one
+- Bullet item two
+- Bullet item three
+
+> A blockquote for a pull quote or notable statement.
+
+<div class="img-placeholder reveal" data-label="Image description here" data-src=""></div>
+
+*This perspective was authored by Libbie Frost and Rayouf Alhumedhi. If you are building in the creative tooling space, reach out directly to lfrost@bvp.com and ralhumedhi@bvp.com.*
+<!-- SWAP END -->
+`;
+
+    // ────────────────────────────────────────────────────────
+    // RENDER ARTICLE
+    // Parses markdown → HTML, then upgrades img-placeholder
+    // divs with accessible markup and data-src attributes.
+    // ────────────────────────────────────────────────────────
+    function renderArticle() {
+      const container = document.getElementById('article');
+
+      // Parse markdown
+      const html = marked.parse(ARTICLE_MD);
+
+      // Inject into a temp node so we can traverse the DOM
+      const temp = document.createElement('div');
+      temp.innerHTML = html;
+
+      // Upgrade img-placeholder divs
+      temp.querySelectorAll('.img-placeholder').forEach(el => {
+        const label = el.getAttribute('data-label') || 'image';
+        const src = el.getAttribute('data-src') || '';
+        const hasImage = src !== '';
+        el.innerHTML = hasImage
+          ? `<img src="${src}" alt="${label}" style="width:100%;height:100%;object-fit:contain;display:block;">`
+          : `
+            <!-- SWAP: ${label} -->
+            <img data-src="" src="" alt="${label}">
+            <!-- SWAP END -->
+            <span class="img-placeholder-icon">□</span>
+            <span class="img-placeholder-label">${label}</span>
+          `;
+      });
+
+      // Move all children into the real container and tag for reveal
+      Array.from(temp.children).forEach(el => {
+        if (!el.classList.contains('reveal')) {
+          el.classList.add('reveal');
+        }
+        container.appendChild(el);
+      });
+    }
+
+    // ────────────────────────────────────────────────────────
+    // SCROLL REVEAL — IntersectionObserver
+    // Elements enter at opacity 0 / translateY(26px) and
+    // transition to visible as they scroll into the viewport.
+    // Elements that enter together are staggered by 80ms each.
+    // ────────────────────────────────────────────────────────
+    function initReveal() {
+      const observer = new IntersectionObserver((entries) => {
+        // Collect elements entering this tick
+        const entering = entries.filter(e => e.isIntersecting);
+
+        entering.forEach((entry, i) => {
+          const el = entry.target;
+          // Stagger elements that appear in the same observation batch
+          el.style.transitionDelay = `${i * 80}ms`;
+          el.classList.add('visible');
+          // Reset delay after transition so re-entry (if any) feels clean
+          el.addEventListener('transitionend', () => {
+            el.style.transitionDelay = '0ms';
+          }, { once: true });
+          observer.unobserve(el);
+        });
+      }, {
+        threshold: 0.07,
+        rootMargin: '0px 0px -36px 0px'
+      });
+
+      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    }
+
+    // ────────────────────────────────────────────────────────
+    // INIT
+    // ────────────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+      renderArticle();
+      initReveal();
+    });
+  </script>
+  <script>
+    const SimplexNoise = function() {
+      const F3 = 1.0/3.0, G3 = 1.0/6.0;
+      const p = new Uint8Array(256);
+      for (let i = 0; i < 256; i++) p[i] = Math.floor(Math.random() * 256);
+      const perm = new Uint8Array(512), permMod12 = new Uint8Array(512);
+      for (let i = 0; i < 512; i++) { perm[i] = p[i&255]; permMod12[i] = perm[i] % 12; }
+      const grad3 = new Float32Array([1,1,0,-1,1,0,1,-1,0,-1,-1,0,1,0,1,-1,0,1,1,0,-1,-1,0,-1,0,1,1,0,-1,1,0,1,-1,0,-1,-1]);
+      return { noise3D: function(x,y,z) {
+        let n0,n1,n2,n3;
+        const s=(x+y+z)*F3, i=Math.floor(x+s), j=Math.floor(y+s), k=Math.floor(z+s);
+        const t=(i+j+k)*G3, X0=i-t, Y0=j-t, Z0=k-t;
+        const x0=x-X0, y0=y-Y0, z0=z-Z0;
+        let i1,j1,k1,i2,j2,k2;
+        if(x0>=y0){if(y0>=z0){i1=1;j1=0;k1=0;i2=1;j2=1;k2=0;}else if(x0>=z0){i1=1;j1=0;k1=0;i2=1;j2=0;k2=1;}else{i1=0;j1=0;k1=1;i2=1;j2=0;k2=1;}}
+        else{if(y0<z0){i1=0;j1=0;k1=1;i2=0;j2=1;k2=1;}else if(x0<z0){i1=0;j1=1;k1=0;i2=0;j2=1;k2=1;}else{i1=0;j1=1;k1=0;i2=1;j2=1;k2=0;}}
+        const x1=x0-i1+G3,y1=y0-j1+G3,z1=z0-k1+G3;
+        const x2=x0-i2+2*G3,y2=y0-j2+2*G3,z2=z0-k2+2*G3;
+        const x3=x0-1+3*G3,y3=y0-1+3*G3,z3=z0-1+3*G3;
+        const ii=i&255,jj=j&255,kk=k&255;
+        function contrib(x,y,z,gi){let t=0.6-x*x-y*y-z*z;if(t<0)return 0;t*=t;return t*t*(grad3[gi]*x+grad3[gi+1]*y+grad3[gi+2]*z);}
+        n0=contrib(x0,y0,z0,permMod12[ii+perm[jj+perm[kk]]]*3);
+        n1=contrib(x1,y1,z1,permMod12[ii+i1+perm[jj+j1+perm[kk+k1]]]*3);
+        n2=contrib(x2,y2,z2,permMod12[ii+i2+perm[jj+j2+perm[kk+k2]]]*3);
+        n3=contrib(x3,y3,z3,permMod12[ii+1+perm[jj+1+perm[kk+1]]]*3);
+        return 32*(n0+n1+n2+n3);
+      }};
+    };
+
+    window.addEventListener('load', function() {
+      const canvas = document.getElementById('hero-water-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d', { alpha: false });
+      const simplex = SimplexNoise();
+      const fontSize = 10;
+      const gridStepX = fontSize * 0.65;
+      const gridStepY = fontSize * 0.9;
+      const params = { scale: 0.0015, speed: 0.0004, strata: 12.0, turbulence: 1.24 };
+      const palette = ['#888888', '#444444', '#111111'];
+      const bg = '#ffffff';
+      const sourceCode = `creative conviction part ii brand and narrative as ai commoditizes execution the premium shifts to taste voice and point of view the brands that win will be the ones with the courage to stand for something specific`;
+      let w, h, time = 0;
+
+      function resize() {
+        const rect = canvas.parentElement.getBoundingClientRect();
+        w = canvas.width  = rect.width  || 600;
+        h = canvas.height = rect.height || 800;
+        ctx.font = `600 ${fontSize}px "JetBrains Mono"`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      const isMobile = window.innerWidth < 768;
+      const interval = isMobile ? 1000/30 : 0;
+      let lastFrame = 0, charIndex = 0;
+
+      function render(now) {
+        if (now - lastFrame >= interval) {
+          lastFrame = now;
+          ctx.fillStyle = bg;
+          ctx.fillRect(0, 0, w, h);
+          ctx.font = `600 ${fontSize}px "JetBrains Mono"`;
+          for (let y = 0; y < h; y += gridStepY) {
+            for (let x = 0; x < w; x += gridStepX) {
+              const nx = x * params.scale, ny = y * params.scale;
+              const warpX = simplex.noise3D(nx, ny, time * 0.5) * params.turbulence;
+              const warpY = simplex.noise3D(nx+100, ny+100, time * 0.5) * params.turbulence;
+              let n = simplex.noise3D(nx+warpX, ny+warpY, time);
+              n = (n + 1) / 2;
+              const contour = Math.sin(n * Math.PI * params.strata);
+              if (contour > 0.4) {
+                let colorIdx = Math.max(0, Math.min(palette.length-1, Math.floor(n * palette.length)));
+                ctx.globalAlpha = (contour - 0.4) / 0.6;
+                ctx.fillStyle = palette[colorIdx];
+                let char = ' ';
+                while (char === ' ' || char === '\n') { char = sourceCode[charIndex % sourceCode.length]; charIndex++; }
+                ctx.fillText(char, x, y);
+              }
+            }
+          }
+          ctx.globalAlpha = 1;
+          time += params.speed;
+        }
+        requestAnimationFrame(render);
+      }
+      requestAnimationFrame(render);
+    });
+  </script>
+</body>
+</html>
